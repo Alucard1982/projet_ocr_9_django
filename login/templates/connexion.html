@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+<div class="row d-flex justify-content-center mt-5">
+    <div class="col-md-2 mt-5">
+        <H5>Sign in now</H5>
+        <button class="btn btn-success mt-4 ml-3"><a class="text-light" href="{% url 'sign_up' %}">Sign in</a></button>
+    </div>
+    <div class="col-md-6">
+        <H5 class="text-center">Login</H5>
+        <form method="POST">
+            {% csrf_token %}
+            {{form|crispy}}
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-8 mt-2">
+                    <input class="btn btn-primary btn-md btn-block  " type="submit" value="Login"/>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <p> {{message}}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

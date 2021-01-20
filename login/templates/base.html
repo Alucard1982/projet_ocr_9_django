@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}My django application{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<header>
+    <div class="text-center">
+        <H3 class="bg-light border border-dark">LITReview</H3>
+    </div>
+</header>
+<body>
+<div class="container-fluid">
+    {% block content %}
+    {% endblock %}
+</div>
+</body>
+</html>
