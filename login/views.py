@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from login.form import RegistrationForm, LoginForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 
 def sign_up(request):
@@ -31,3 +31,8 @@ def login_blog(request):
     form = LoginForm()
     context = {'form': form}
     return render(request, "connexion.html", context)
+
+
+def logout_blog(request):
+    logout(request)
+    return redirect('login')
