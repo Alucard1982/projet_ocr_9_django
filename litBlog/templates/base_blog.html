@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}My django application{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<header>
+    <div class="container-fluid">
+        <div class ="bg-light border border-dark ">
+            <div class="row">
+                <div class="col-lg-7 text-right ">
+                    <H3 class="mr-4">LITReview</H3>
+                </div>
+                <div class=" menu col-lg-5 text-right mt-2 ">
+                    <a class="mr-4"href="#">Flux</a>
+                    <a class="mr-4"href="#">Post</a>
+                    <a class="mr-4"href="#">Abonnements</a>
+                    <a class="mr-4"href="{% url 'logout_blog' %}">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<body>
+<div class="container-fluid">
+    {% block content %}
+    {% endblock %}
+</div>
+</body>
+</html>
