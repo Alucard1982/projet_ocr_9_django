@@ -2,6 +2,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
 from django.db import models
 from litLogin.models import User
+from django_userforeignkey.models.fields import UserForeignKey
 
 
 class Ticket(models.Model):
@@ -10,13 +11,14 @@ class Ticket(models.Model):
     image = models.ImageField(null=True, blank=True)
     time_created = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    user = UserForeignKey(auto_user_add=True, on_delete=models.CASCADE)
 
 
 class Review(models.Model):
+    headline = models.CharField(max_length=128)
     rating = models.PositiveSmallIntegerField(
         # validates that rating must be between 0 and 5
         validators=[MinValueValidator(0), MaxValueValidator(5)])
-    headline = models.CharField(max_length=128)
     body = models.CharField(max_length=8192, blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
@@ -34,6 +36,3 @@ class UserFollows(models.Model):
         unique_together = ('user', 'followed_user',)
 
 
-from django.db import models
-
-# Create your models here.

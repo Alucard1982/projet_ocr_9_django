@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'litLogin.apps.LoginConfig',
     'litBlog.apps.LitBlogConfig',
     'crispy_forms',
+    'django_userforeignkey',
 
 
 ]
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_userforeignkey.middleware.UserForeignKeyMiddleware',
 ]
 
 ROOT_URLCONF = 'projet_ocr_9_blog.urls'

@@ -1,15 +1,10 @@
 {% extends "base_blog.html" %}
-
 {% block title %}Flux{% endblock %}
 
 {% block content %}
-<div class="row d-flex justify-content-center mt-5">
-    <button class="btn btn-success mr-5"><a class="text-light" href="#">Créer une critique</a></button>
-    <button class ="btn btn-primary "><a  class="text-light" href="{% url 'ticket'%}">Créer un ticket</a></button>
-</div>
-{% for ticket in all_ticket %}
+{% for ticket in own_ticket%}
 <div class="row d-flex justify-content-center ">
-    <div class="col-lg-6">
+    <div class="col-lg-6 ">
         <div class=" border border-dark mt-4">
             <p><span class="font-weight-bold">{{ticket.user}} a demandé une critique</span>
                 <span class="font-weight-light ml-2">{{ticket.time_created}}</span>
@@ -18,10 +13,14 @@
             <p>{{ticket.description}}</p>
             {{ticket.image}}
             <div class="row">
-                <button class ="btn btn-info ml-auto mr-4 mb-2"><a class="text-light" href="#">Donner son avis</a></button>
+                <button class ="btn btn-danger ml-auto mr-4 mb-2">
+                    <a class="text-light" href="{% url 'delete_ticket' id_ticket=ticket.pk %}">Delete</a></button>
+                <button class ="btn btn-info mr-4 mb-2">
+                    <a class="text-light" href="{% url 'ticket' id_ticket=ticket.pk %}">Update</a></button>
             </div>
         </div>
     </div>
 </div>
+
 {% endfor %}
 {% endblock %}

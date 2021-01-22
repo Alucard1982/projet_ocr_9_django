@@ -1,0 +1,24 @@
+{% extends "base_blog.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Ticket{% endblock %}
+
+{% block content %}
+<div class="row d-flex justify-content-center">
+    <div class="col-md-6">
+        <H5 class="text-center">Crée un Ticket</H5>
+        {% if form.instance.id %}
+            <form method="POST" action="{% url 'ticket' id_ticket=form.instance.id %}">
+        {% else %}
+            <form method="POST" action="{% url 'ticket' %}">
+        {% endif %}
+                {% csrf_token %}
+                {{form|crispy}}
+                <div class="row">
+                    <input class="btn btn-primary ml-auto mr-3" type="submit" value="Submit"/>
+                </div>
+            </form>
+    </div>
+</div>
+
+{% endblock %}

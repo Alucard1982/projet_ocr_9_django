@@ -8,15 +8,15 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <header>
-    <div class="container-fluid">
-        <div class ="bg-light border border-dark ">
-            <div class="row">
+    <div class="container-fluid  ">
+        <div class ="bg-light border border-dark fixed-top ">
+            <div class="row ">
                 <div class="col-lg-7 text-right ">
                     <H3 class="mr-4">LITReview</H3>
                 </div>
                 <div class=" menu col-lg-5 text-right mt-2 ">
-                    <a class="mr-4"href="#">Flux</a>
-                    <a class="mr-4"href="#">Post</a>
+                    <a class="mr-4"href="{% url 'flux' %}">Flux</a>
+                    <a class="mr-4"href="{% url 'post' %}">Post</a>
                     <a class="mr-4"href="#">Abonnements</a>
                     <a class="mr-4"href="{% url 'logout_blog' %}">Logout</a>
                 </div>
@@ -25,7 +25,7 @@
     </div>
 </header>
 <body>
-<div class="container-fluid">
+<div class="container-fluid mt-5">
     {% block content %}
     {% endblock %}
 </div>
