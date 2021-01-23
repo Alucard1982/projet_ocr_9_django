@@ -6,7 +6,7 @@
 {% block content %}
 <div class="row d-flex justify-content-center">
     <div class="col-md-6">
-        <div class=" border border-dark mt-4">
+        <div class="ticket_flux border border-dark mt-4">
             <p><span class="font-weight-bold">{{ticket.user}} a demandé une critique</span>
                 <span class="font-weight-light ml-2">{{ticket.time_created}}</span>
             </p>
@@ -16,7 +16,7 @@
             <p>Ticket objet ({{ticket.id}})</p>
         </div>
         <H5 class="text-center mt-3">Créer une critque du ticket ci-dessus</H5>
-        <form method="POST" action="{% url 'review' %}">
+        <form method="POST" >
             {% csrf_token %}
             {{form|crispy}}
             <div class="row">

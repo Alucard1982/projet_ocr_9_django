@@ -2,25 +2,53 @@
 {% block title %}Flux{% endblock %}
 
 {% block content %}
-{% for ticket in own_ticket%}
-<div class="row d-flex justify-content-center ">
-    <div class="col-lg-6 ">
-        <div class=" border border-dark mt-4">
-            <p><span class="font-weight-bold">{{ticket.user}} a demandé une critique</span>
-                <span class="font-weight-light ml-2">{{ticket.time_created}}</span>
-            </p>
-            <p>{{ticket.title}}</p>
-            <p>{{ticket.description}}</p>
-            {{ticket.image}}
-            <div class="row">
-                <button class ="btn btn-danger ml-auto mr-4 mb-2">
-                    <a class="text-light" href="{% url 'delete_ticket' id_ticket=ticket.pk %}">Delete</a></button>
-                <button class ="btn btn-info mr-4 mb-2">
-                    <a class="text-light" href="{% url 'ticket' id_ticket=ticket.pk %}">Update</a></button>
+{% for post in posts %}
+    {% if post.content_type == 'TICKET' %}
+        <div class="row d-flex justify-content-center ">
+            <div class="col-lg-6">
+                <div class=" ticket_flux border border-dark mt-4 pl-3 pr-3 pb-2">
+                    <p><span class="font-weight-bold">{{post.user}} a demandé une critique</span>
+                        <span class="font-weight-light ml-2">{{post.time_created}}</span>
+                    </p>
+                    <p>{{post.title}}</p>
+                    <p>{{post.description}}</p>
+                    {{post.image}}
+                    <div class="row">
+                        <button class ="btn btn-danger ml-auto mr-4 mb-2">
+                            <a class="text-light" href="{% url 'delete_ticket' id_ticket=post.pk %}">Delete</a></button>
+                        <button class ="btn btn-info mr-4 mb-2">
+                            <a class="text-light" href="{% url 'ticket' id_ticket=post.pk %}">Update</a></button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-
+    {% elif post.content_type == 'REVIEW' %}
+        <div class="row d-flex justify-content-center mt-4 ">
+            <div class="col-lg-6">
+                <div class="ticket_flux border border-dark pl-3 pr-3 pb-2">
+                     <p><span class="font-weight-bold">{{post.user}} a repondu à un ticket de {{post.ticket.user}}</span>
+                         <span class="font-weight-light ml-2">{{post.time_created}}</span>
+                     </p>
+                    <p>{{post.headline}}
+                    <p>Rating: {{post.rating}} <span class="text-warning">&#9733</span></p>
+                    <p>{{post.body}}</p>
+                    <div class="ticket_flux border border-dark mt-4 ">
+                        <p><span class="font-weight-bold">{{post.ticket.user}}</span>
+                            <span class="font-weight-light ml-2">{{post.ticket.time_created}}</span>
+                        </p>
+                        <p>{{post.ticket.title}}</p>
+                        <p>{{post.ticket.description}}</p>
+                        {{post.ticket.image}}
+                    </div>
+                    <div class="row mt-3" >
+                        <button class ="btn btn-danger ml-auto mr-4 mb-2">
+                            <a class="text-light" href="{% url 'delete_review' id_review=post.pk %}">Delete</a></button>
+                        <button class ="btn btn-info mr-4 mb-2">
+                            <a class="text-light" href="{% url 'update_review' id_ticket=post.ticket.pk id_review=post.pk %}">Update</a></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endfor %}
 {% endblock %}

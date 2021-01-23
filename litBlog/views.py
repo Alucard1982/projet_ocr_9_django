@@ -11,18 +11,22 @@ from litBlog.models import Ticket, Review, UserFollows
 
 @login_required(login_url='login_blog')
 def flux(request):
+    ticket_button_hide = []
     try:
         all_ticket = Ticket.objects.all()
     except Ticket.DoesNotExist:
         raise Http404('Ticket does not exist')
-    all_ticket = all_ticket.annotate(content_type=Value('TICKET', CharField()))
     try:
         all_review = Review.objects.all()
     except Review.DoesNotExist:
         raise Http404('Ticket does not exist')
+    all_ticket = all_ticket.annotate(content_type=Value('TICKET', CharField()))
     all_review = all_review.annotate(content_type=Value('REVIEW', CharField()))
     posts = sorted(chain(all_ticket, all_review), key=lambda post: post.time_created, reverse=True)
-    context = {'posts': posts}
+    for review in all_review:
+        if request.user.id == review.user:
+            ticket_button_hide.append(review.ticket)
+    context = {'posts': posts, 'ticket_button_hide': ticket_button_hide}
     return render(request, 'flux.html', context)
 
 
@@ -32,8 +36,14 @@ def post(request):
         own_ticket = Ticket.objects.filter(user=request.user)
     except Ticket.DoesNotExist:
         raise Http404('Ticket does not exist')
-    sorted_all_ticket = sorted(own_ticket, key=lambda ticket: ticket.time_created, reverse=True)
-    context = {'own_ticket': sorted_all_ticket}
+    try:
+        own_review = Review.objects.filter(user=request.user)
+    except Review.DoesNotExist:
+        raise Http404
+    own_ticket = own_ticket.annotate(content_type=Value('TICKET', CharField()))
+    own_review = own_review.annotate(content_type=Value('REVIEW', CharField()))
+    posts = sorted(chain(own_ticket, own_review), key=lambda post: post.time_created, reverse=True)
+    context = {'posts': posts}
     return render(request, 'post.html', context)
 
 
@@ -57,14 +67,21 @@ def delete_ticket(request, id_ticket):
     return redirect('flux')
 
 
-def review(request, id_ticket=None):
+def review(request, id_ticket=None, id_review=None):
+    instance_review = get_object_or_404(Review, pk=id_review) if id_review is not None else None
     if request.method == 'POST':
-        form = ReviewForm(request.POST)
+        form = ReviewForm(request.POST, instance=instance_review)
         if form.is_valid():
             form.save()
             return redirect('flux')
     else:
-        form = ReviewForm()
+        form = ReviewForm(instance=instance_review)
     instance_ticket = get_object_or_404(Ticket, pk=id_ticket)
     context = {'form': form, 'ticket': instance_ticket}
     return render(request, 'review.html', context)
+
+
+def delete_review(request, id_review):
+    review = get_object_or_404(Review, pk=id_review)
+    review.delete()
+    return redirect('flux')

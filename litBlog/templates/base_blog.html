@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}My django application{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}" type="text/css" media="screen">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <header>
     <div class="container-fluid  ">
-        <div class ="bg-light border border-dark fixed-top ">
+        <div class =" navigation bg-light border border-dark fixed-top ">
             <div class="row ">
                 <div class="col-lg-7 text-right ">
                     <H3 class="mr-4">LITReview</H3>
@@ -24,7 +25,7 @@
         </div>
     </div>
 </header>
-<body>
+<body class="test">
 <div class="container-fluid mt-5">
     {% block content %}
     {% endblock %}
