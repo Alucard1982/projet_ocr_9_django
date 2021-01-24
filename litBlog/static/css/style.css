@@ -1,12 +1,12 @@
 .ticket_flux{
     border-radius: 10px;
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(#2aa6aa, white);
+    background: linear-gradient(#88acac, white);
 
 }
 .navigation{
     border-radius: 10px;
-    background: linear-gradient(#2aa6aa, white);
+    background: linear-gradient(#88acac, white);
 }
 
 .test{

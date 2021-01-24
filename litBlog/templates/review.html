@@ -6,13 +6,15 @@
 {% block content %}
 <div class="row d-flex justify-content-center">
     <div class="col-md-6">
-        <div class="ticket_flux border border-dark mt-4">
+        <div class="ticket_flux border border-dark mt-4 pl-3 pb-2">
             <p><span class="font-weight-bold">{{ticket.user}} a demandé une critique</span>
                 <span class="font-weight-light ml-2">{{ticket.time_created}}</span>
             </p>
             <p>{{ticket.title}}</p>
             <p>{{ticket.description}}</p>
-            <p>{{ticket.image}}</p>
+            {% if ticket.image %}
+                <img src="{{ticket.image.url}}" width="100px" height="100px" alt="img" />
+            {% endif %}
             <p>Ticket objet ({{ticket.id}})</p>
         </div>
         <H5 class="text-center mt-3">Créer une critque du ticket ci-dessus</H5>

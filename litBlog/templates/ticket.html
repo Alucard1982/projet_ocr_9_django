@@ -8,9 +8,9 @@
     <div class="col-md-6">
         <H5 class="text-center">Crée un Ticket</H5>
         {% if form.instance.id %}
-            <form method="POST" action="{% url 'ticket' id_ticket=form.instance.id %}">
+            <form method="POST" action="{% url 'ticket' id_ticket=form.instance.id %}" enctype="multipart/form-data">
         {% else %}
-            <form method="POST" action="{% url 'ticket' %}">
+            <form method="POST" action="{% url 'ticket' %}" enctype="multipart/form-data">
         {% endif %}
                 {% csrf_token %}
                 {{form|crispy}}

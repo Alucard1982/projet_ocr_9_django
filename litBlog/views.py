@@ -51,7 +51,7 @@ def post(request):
 def ticket(request, id_ticket=None):
     instance_ticket = get_object_or_404(Ticket, pk=id_ticket) if id_ticket is not None else None
     if request.method == 'POST':
-        form = TicketForm(request.POST, instance=instance_ticket)
+        form = TicketForm(request.POST, request.FILES, instance=instance_ticket)
         if form.is_valid():
             form.save()
             return redirect('flux')

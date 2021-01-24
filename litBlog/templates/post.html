@@ -12,7 +12,9 @@
                     </p>
                     <p>{{post.title}}</p>
                     <p>{{post.description}}</p>
-                    {{post.image}}
+                    {% if post.image %}
+                        <img src="{{post.image.url}}" width="100px" height="100px" alt="img" />
+                    {% endif %}
                     <div class="row">
                         <button class ="btn btn-danger ml-auto mr-4 mb-2">
                             <a class="text-light" href="{% url 'delete_ticket' id_ticket=post.pk %}">Delete</a></button>
@@ -32,13 +34,15 @@
                     <p>{{post.headline}}
                     <p>Rating: {{post.rating}} <span class="text-warning">&#9733</span></p>
                     <p>{{post.body}}</p>
-                    <div class="ticket_flux border border-dark mt-4 ">
+                    <div class="ticket_flux border border-dark mt-4 pl-3 pb-2">
                         <p><span class="font-weight-bold">{{post.ticket.user}}</span>
                             <span class="font-weight-light ml-2">{{post.ticket.time_created}}</span>
                         </p>
                         <p>{{post.ticket.title}}</p>
                         <p>{{post.ticket.description}}</p>
-                        {{post.ticket.image}}
+                        {% if post.ticket.image %}
+                            <img src="{{post.ticket.image.url}}" width="100px" height="100px" alt="img" />
+                        {% endif %}
                     </div>
                     <div class="row mt-3" >
                         <button class ="btn btn-danger ml-auto mr-4 mb-2">
