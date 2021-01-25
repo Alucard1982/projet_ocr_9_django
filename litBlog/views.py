@@ -1,12 +1,13 @@
 from itertools import chain
 
+from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.db.models import CharField, Value
 
-from litBlog.form import TicketForm, ReviewForm
-from litBlog.models import Ticket, Review, UserFollows
+from litBlog.form import TicketForm, ReviewForm, FollowForm
+from litBlog.models import Ticket, Review, UserFollows, User
 
 
 @login_required(login_url='login_blog')
@@ -19,7 +20,7 @@ def flux(request):
     try:
         all_review = Review.objects.all()
     except Review.DoesNotExist:
-        raise Http404('Ticket does not exist')
+        raise Http404('Review does not exist')
     all_ticket = all_ticket.annotate(content_type=Value('TICKET', CharField()))
     all_review = all_review.annotate(content_type=Value('REVIEW', CharField()))
     posts = sorted(chain(all_ticket, all_review), key=lambda post: post.time_created, reverse=True)
@@ -39,7 +40,7 @@ def post(request):
     try:
         own_review = Review.objects.filter(user=request.user)
     except Review.DoesNotExist:
-        raise Http404
+        raise Http404('Review does not exist')
     own_ticket = own_ticket.annotate(content_type=Value('TICKET', CharField()))
     own_review = own_review.annotate(content_type=Value('REVIEW', CharField()))
     posts = sorted(chain(own_ticket, own_review), key=lambda post: post.time_created, reverse=True)
@@ -67,6 +68,7 @@ def delete_ticket(request, id_ticket):
     return redirect('flux')
 
 
+@login_required(login_url='login_blog')
 def review(request, id_ticket=None, id_review=None):
     instance_review = get_object_or_404(Review, pk=id_review) if id_review is not None else None
     if request.method == 'POST':
@@ -85,3 +87,21 @@ def delete_review(request, id_review):
     review = get_object_or_404(Review, pk=id_review)
     review.delete()
     return redirect('flux')
+
+
+@login_required(login_url='login_blog')
+def follow(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        users = User.objects.all()
+        for user in users:
+            if user.username == username:
+                user_follow = UserFollows(user=request.user, followed_user=user)
+                user_follow.save()
+                return redirect('abonnements')
+        else:
+            messages.info(request, 'Username does not exist')
+    form = FollowForm()
+    users_follow = UserFollows.objects.filter(user=request.user)
+    context = {'form': form, 'users_follow': users_follow}
+    return render(request, 'abonnement.html', context)

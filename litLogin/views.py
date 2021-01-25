@@ -36,3 +36,6 @@ def login_blog(request):
 def logout_blog(request):
     logout(request)
     return redirect('login_blog')
+
+
+
