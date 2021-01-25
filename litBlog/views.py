@@ -14,7 +14,7 @@ from litBlog.models import Ticket, Review, UserFollows, User
 def flux(request):
     ticket_button_hide = []
     try:
-        all_ticket = Ticket.objects.all()
+        all_ticket = Ticket.objects.filter(boolean=False)
     except Ticket.DoesNotExist:
         raise Http404('Ticket does not exist')
     try:
@@ -24,10 +24,10 @@ def flux(request):
     all_ticket = all_ticket.annotate(content_type=Value('TICKET', CharField()))
     all_review = all_review.annotate(content_type=Value('REVIEW', CharField()))
     posts = sorted(chain(all_ticket, all_review), key=lambda post: post.time_created, reverse=True)
-    for review in all_review:
+    """for review in all_review:
         if request.user.id == review.user:
-            ticket_button_hide.append(review.ticket)
-    context = {'posts': posts, 'ticket_button_hide': ticket_button_hide}
+            ticket_button_hide.append(review.ticket)"""
+    context = {'posts': posts}
     return render(request, 'flux.html', context)
 
 
@@ -46,6 +46,17 @@ def post(request):
     posts = sorted(chain(own_ticket, own_review), key=lambda post: post.time_created, reverse=True)
     context = {'posts': posts}
     return render(request, 'post.html', context)
+
+
+@login_required(login_url='login_blog')
+def post_user_following(request):
+    users_following_ticket = Ticket.objects.filter(user__followed_by__user=request.user)
+    followed_review = Review.objects.filter(user__followed_by__user=request.user)
+    followed_ticket = users_following_ticket.annotate(content_type=Value('TICKET', CharField()))
+    followed_review = followed_review.annotate(content_type=Value('REVIEW', CharField()))
+    posts = sorted(chain(followed_ticket, followed_review), key=lambda post: post.time_created, reverse=True)
+    context = {'posts': posts}
+    return render(request, 'post_following_user.html', context)
 
 
 @login_required(login_url='login_blog')
@@ -70,15 +81,17 @@ def delete_ticket(request, id_ticket):
 
 @login_required(login_url='login_blog')
 def review(request, id_ticket=None, id_review=None):
+    instance_ticket = get_object_or_404(Ticket, pk=id_ticket)
     instance_review = get_object_or_404(Review, pk=id_review) if id_review is not None else None
     if request.method == 'POST':
         form = ReviewForm(request.POST, instance=instance_review)
         if form.is_valid():
-            form.save()
+            review = form.save(commit=False)
+            review.ticket = instance_ticket
+            review.save()
             return redirect('flux')
     else:
         form = ReviewForm(instance=instance_review)
-    instance_ticket = get_object_or_404(Ticket, pk=id_ticket)
     context = {'form': form, 'ticket': instance_ticket}
     return render(request, 'review.html', context)
 
@@ -90,10 +103,40 @@ def delete_review(request, id_review):
 
 
 @login_required(login_url='login_blog')
+def own_review(request):
+    if request.method == 'POST':
+        form_ticket = TicketForm(request.POST, request.FILES)
+        form_review = ReviewForm(request.POST)
+        if form_ticket.is_valid():
+            ticket = form_ticket.save(commit=False)
+            ticket.boolean = True
+            ticket.save()
+            return redirect('own_review')
+        if form_review.is_valid():
+            try:
+                instance_ticket = Ticket.objects.filter(user=request.user)
+            except Ticket.DoesNotExist:
+                raise Http404('Ticket does not exist')
+            sorted_instance_ticket = sorted(instance_ticket, key=lambda ticket: ticket.pk, reverse=True)
+            review = form_review.save(commit=False)
+            review.ticket = sorted_instance_ticket[0]
+            review.save()
+            return redirect('flux')
+    else:
+        form_ticket = TicketForm()
+        form_review = ReviewForm()
+    context = {'form_ticket': form_ticket, 'form_review': form_review}
+    return render(request, 'own_review.html', context)
+
+
+@login_required(login_url='login_blog')
 def follow(request):
+    try:
+        users = User.objects.all()
+    except User.DoesNotExist:
+        raise Http404("User does not exist")
     if request.method == "POST":
         username = request.POST.get('username')
-        users = User.objects.all()
         for user in users:
             if user.username == username:
                 user_follow = UserFollows(user=request.user, followed_user=user)
@@ -102,6 +145,16 @@ def follow(request):
         else:
             messages.info(request, 'Username does not exist')
     form = FollowForm()
-    users_follow = UserFollows.objects.filter(user=request.user)
-    context = {'form': form, 'users_follow': users_follow}
-    return render(request, 'abonnement.html', context)
+    try:
+        users_following = UserFollows.objects.filter(user=request.user)
+        users_follower = UserFollows.objects.filter(followed_user=request.user)
+    except UserFollows.DoesNotExist:
+        raise Http404("UserFollows does not exist")
+    context = {'form': form, 'users_following': users_following, 'users_follower': users_follower}
+    return render(request, 'abonnements.html', context)
+
+
+def delete_follow(request, id_follow):
+    follow_user = get_object_or_404(UserFollows, pk=id_follow)
+    follow_user.delete()
+    return redirect('abonnements')

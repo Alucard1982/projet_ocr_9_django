@@ -1,0 +1,46 @@
+{% for post in posts %}
+    {% if post.content_type == 'TICKET' %}
+        <div class=" row d-flex justify-content-center ">
+            <div class="col-lg-6">
+                <div class=" ticket_flux border border-dark mt-4 pl-3 pr-3 pb-2">
+                    <p><span class="font-weight-bold">{{post.user}} a demandé une critique</span>
+                        <span class="font-weight-light ml-2">{{post.time_created}}</span>
+                    </p>
+                    <p>{{post.title}}</p>
+                    <p>{{post.description}}</p>
+                    {% if post.image %}
+                        <img src="{{post.image.url}}" width="100px" height="100px" alt="img" />
+                    {% endif %}
+                    <div class="row">
+                        <button class=" test btn btn-info ml-auto mr-4 mb-2">
+                            <a class="text-light" href="{% url 'review' id_ticket=post.id %}">Donner son avis</a></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% elif post.content_type == 'REVIEW' %}
+<div class="row d-flex justify-content-center mt-4 ">
+    <div class="col-lg-6">
+        <div class=" ticket_flux border border-dark pl-3 pr-3 pb-2">
+             <p><span class="font-weight-bold">{{post.user}} a posté une critique</span>
+                 <span class="font-weight-light ml-2">{{post.time_created}}</span>
+             </p>
+            <p>{{post.headline}}
+            <p>Rating: {{post.rating}} <span class="text-warning">&#9733</span></p>
+            <p>{{post.body}}</p>
+            <div class=" ticket_flux border border-dark mt-4 pl-3 pb-2">
+                <p><span class="font-weight-bold">{{post.ticket.user}}</span>
+                    <span class="font-weight-light ml-2">{{post.ticket.time_created}}</span>
+                </p>
+                <p>{{post.ticket.title}}</p>
+                <p>{{post.ticket.description}}</p>
+                {% if post.ticket.image %}
+                    <img src="{{post.ticket.image.url}}" width="100px" height="100px" alt="img" />
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+    {% endif %}
+{% endfor %}
