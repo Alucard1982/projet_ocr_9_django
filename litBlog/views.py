@@ -24,10 +24,10 @@ def flux(request):
     all_ticket = all_ticket.annotate(content_type=Value('TICKET', CharField()))
     all_review = all_review.annotate(content_type=Value('REVIEW', CharField()))
     posts = sorted(chain(all_ticket, all_review), key=lambda post: post.time_created, reverse=True)
-    """for review in all_review:
-        if request.user.id == review.user:
-            ticket_button_hide.append(review.ticket)"""
-    context = {'posts': posts}
+    for review in all_review:
+        if request.user == review.user:
+            ticket_button_hide.append(review.ticket.id)
+    context = {'posts': posts, 'ticket_button_hide': ticket_button_hide}
     return render(request, 'flux.html', context)
 
 
@@ -50,12 +50,16 @@ def post(request):
 
 @login_required(login_url='login_blog')
 def post_user_following(request):
+    ticket_button_hide = []
     users_following_ticket = Ticket.objects.filter(user__followed_by__user=request.user)
     followed_review = Review.objects.filter(user__followed_by__user=request.user)
     followed_ticket = users_following_ticket.annotate(content_type=Value('TICKET', CharField()))
     followed_review = followed_review.annotate(content_type=Value('REVIEW', CharField()))
     posts = sorted(chain(followed_ticket, followed_review), key=lambda post: post.time_created, reverse=True)
-    context = {'posts': posts}
+    for review in followed_review:
+        if request.user == review.user:
+            ticket_button_hide.append(review.ticket.id)
+    context = {'posts': posts, 'ticket_button_hide' : ticket_button_hide}
     return render(request, 'post_following_user.html', context)
 
 
@@ -139,8 +143,11 @@ def follow(request):
         username = request.POST.get('username')
         for user in users:
             if user.username == username:
-                user_follow = UserFollows(user=request.user, followed_user=user)
-                user_follow.save()
+                if user.username == request.user.username:
+                    messages.info(request, 'Cant following you')
+                else:
+                    user_follow = UserFollows(user=request.user, followed_user=user)
+                    user_follow.save()
                 return redirect('abonnements')
         else:
             messages.info(request, 'Username does not exist')

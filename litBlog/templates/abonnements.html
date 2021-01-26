@@ -38,7 +38,8 @@
                 <tr>
                     <td>{{user_follow.followed_user}}</td>
                     <td><button class ="btn btn-danger ml-5">
-                            <a class="text-light" href="{% url 'delete_follow' id_follow=user_follow.pk %}">Delete</a></button></td></tr>
+                        <a class="text-light" href="{% url 'delete_follow' id_follow=user_follow.pk %}"
+                           onclick="return confirm('Etes-vous sûr ?');">Delete</a></button></td></tr>
                 {% endfor %}
             </tbody>
         </table>

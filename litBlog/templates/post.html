@@ -17,7 +17,8 @@
                     {% endif %}
                     <div class="row">
                         <button class ="btn btn-danger ml-auto mr-4 mb-2">
-                            <a class="text-light" href="{% url 'delete_ticket' id_ticket=post.pk %}">Delete</a></button>
+                            <a class="text-light" href="{% url 'delete_ticket' id_ticket=post.pk %}"
+                               onclick="return confirm('Etes-vous sûr ?');">Delete</a></button>
                         <button class ="btn btn-info mr-4 mb-2">
                             <a class="text-light" href="{% url 'ticket' id_ticket=post.pk %}">Update</a></button>
                     </div>
@@ -46,7 +47,8 @@
                     </div>
                     <div class="row mt-3" >
                         <button class ="btn btn-danger ml-auto mr-4 mb-2">
-                            <a class="text-light" href="{% url 'delete_review' id_review=post.pk %}">Delete</a></button>
+                            <a class="text-light" href="{% url 'delete_review' id_review=post.pk %}"
+                               onclick="return confirm('Etes-vous sûr ?');">Delete</a></button>
                         <button class ="btn btn-info mr-4 mb-2">
                             <a class="text-light" href="{% url 'update_review' id_ticket=post.ticket.pk id_review=post.pk %}">Update</a></button>
                     </div>

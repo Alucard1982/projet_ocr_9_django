@@ -13,7 +13,7 @@
                 <input class="btn btn-primary ml-auto mr-3" type="submit" value="Submit"/>
             </div>
         </form>
-        <form method="POST">
+        <form class="form" method="POST">
             {% csrf_token %}
             {{form_review|crispy}}
             <div class="row">

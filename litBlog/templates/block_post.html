@@ -12,8 +12,11 @@
                         <img src="{{post.image.url}}" width="100px" height="100px" alt="img" />
                     {% endif %}
                     <div class="row">
-                        <button class=" test btn btn-info ml-auto mr-4 mb-2">
-                            <a class="text-light" href="{% url 'review' id_ticket=post.id %}">Donner son avis</a></button>
+                        {% if post.id in ticket_button_hide or post.user == request.user %}
+                        {% else %}
+                            <button class=" test btn btn-info ml-auto mr-4 mb-2">
+                                <a class="text-light" href="{% url 'review' id_ticket=post.id %}">Donner son avis</a></button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
