@@ -1,8 +1,8 @@
 from itertools import chain
 
 from django.contrib import messages
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
 from django.db.models import CharField, Value
 
@@ -51,15 +51,25 @@ def post(request):
 @login_required(login_url='login_blog')
 def post_user_following(request):
     ticket_button_hide = []
-    users_following_ticket = Ticket.objects.filter(user__followed_by__user=request.user)
-    followed_review = Review.objects.filter(user__followed_by__user=request.user)
-    followed_ticket = users_following_ticket.annotate(content_type=Value('TICKET', CharField()))
-    followed_review = followed_review.annotate(content_type=Value('REVIEW', CharField()))
-    posts = sorted(chain(followed_ticket, followed_review), key=lambda post: post.time_created, reverse=True)
-    for review in followed_review:
+    form = FollowForm()
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        users_following_ticket = Ticket.objects.filter(user__followed_by__user=request.user).filter(user__username=username)
+        followed_review = Review.objects.filter(user__followed_by__user=request.user).filter(user__username=username)
+        followed_ticket = users_following_ticket.annotate(content_type=Value('TICKET', CharField()))
+        followed_review = followed_review.annotate(content_type=Value('REVIEW', CharField()))
+        posts = sorted(chain(followed_ticket, followed_review), key=lambda post: post.time_created, reverse=True)
+    else:
+        users_following_ticket = Ticket.objects.filter(user__followed_by__user=request.user)
+        followed_review = Review.objects.filter(user__followed_by__user=request.user)
+        followed_ticket = users_following_ticket.annotate(content_type=Value('TICKET', CharField()))
+        followed_review = followed_review.annotate(content_type=Value('REVIEW', CharField()))
+        posts = sorted(chain(followed_ticket, followed_review), key=lambda post: post.time_created, reverse=True)
+    all_review = Review.objects.all()
+    for review in all_review:
         if request.user == review.user:
             ticket_button_hide.append(review.ticket.id)
-    context = {'posts': posts, 'ticket_button_hide' : ticket_button_hide}
+    context = {'posts': posts, 'ticket_button_hide': ticket_button_hide, 'form': form}
     return render(request, 'post_following_user.html', context)
 
 

@@ -9,12 +9,17 @@
     background: linear-gradient(#88acac, white);
 }
 
-.test{
+.body{
     background-color:#dee7e7;
 }
 
 #div_id_rating div:last-child{
-  display:flex;
-  justify-content:space-between;
+    display:flex;
+    justify-content:space-between;
   }
+
+.lol{
+    margin-top:32px;
+
+ }
 

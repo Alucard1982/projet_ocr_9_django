@@ -18,4 +18,4 @@ class ReviewForm(forms.ModelForm):
 
 
 class FollowForm(forms.Form):
-    username = forms.CharField(max_length=200)
+    username = forms.CharField(max_length=200, widget=forms.TextInput(attrs={"placeholder": "INPUT USER "}))
