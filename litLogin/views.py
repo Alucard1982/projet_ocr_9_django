@@ -27,7 +27,6 @@ def login_blog(request):
             return redirect('flux')
         else:
             messages.info(request, 'Username Or email are incorrect')
-
     form = LoginForm()
     context = {'form': form}
     return render(request, "connexion.html", context)

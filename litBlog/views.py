@@ -54,14 +54,26 @@ def post_user_following(request):
     form = FollowForm()
     if request.method == 'POST':
         username = request.POST.get('username')
-        users_following_ticket = Ticket.objects.filter(user__followed_by__user=request.user).filter(user__username=username)
-        followed_review = Review.objects.filter(user__followed_by__user=request.user).filter(user__username=username)
+        try:
+            users_following_ticket = Ticket.objects.filter(user__followed_by__user=request.user).filter(user__username=username)
+        except Ticket.DoesNotExist:
+            raise Http404('ticket does not exist')
+        try:
+            followed_review = Review.objects.filter(user__followed_by__user=request.user).filter(user__username=username)
+        except Review.DoesNotExist:
+            raise Http404('Review does not exist')
         followed_ticket = users_following_ticket.annotate(content_type=Value('TICKET', CharField()))
         followed_review = followed_review.annotate(content_type=Value('REVIEW', CharField()))
         posts = sorted(chain(followed_ticket, followed_review), key=lambda post: post.time_created, reverse=True)
     else:
-        users_following_ticket = Ticket.objects.filter(user__followed_by__user=request.user)
-        followed_review = Review.objects.filter(user__followed_by__user=request.user)
+        try:
+            users_following_ticket = Ticket.objects.filter(user__followed_by__user=request.user)
+        except Ticket.DoesNotExist:
+            raise Http404('ticket does not exist')
+        try:
+            followed_review = Review.objects.filter(user__followed_by__user=request.user)
+        except Review.DoesNotExist:
+            raise Http404('ticket does not exist')
         followed_ticket = users_following_ticket.annotate(content_type=Value('TICKET', CharField()))
         followed_review = followed_review.annotate(content_type=Value('REVIEW', CharField()))
         posts = sorted(chain(followed_ticket, followed_review), key=lambda post: post.time_created, reverse=True)
