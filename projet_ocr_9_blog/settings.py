@@ -107,6 +107,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -130,4 +132,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 AUTH_USER_MODEL = "litLogin.User"
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 5 * 60
 
