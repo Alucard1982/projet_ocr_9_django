@@ -6,13 +6,11 @@
 {% block content %}
 <div class="row d-flex justify-content-center">
     <div class="col-md-4">
-        <form method="POST" >
+        <form method="POST">
             {% csrf_token %}
             {{form|crispy}}
+            <input class="btn btn-primary" type="submit" value="Submit"/>
         </form>
-    </div>
-    <div>
-         <input class="lol btn btn-primary" type="submit" value="Submit"/>
     </div>
 </div>
 {% include 'block_post.html' %}

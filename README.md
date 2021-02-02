@@ -12,7 +12,7 @@ Le développement du projet est fini.
 Installation
 
 2. créer le virtual env : python -m venv venv (à la racine du projet)
-3. switcher sur le virtual env : source venv/Scripts/activate pour linux ou venv\Scripts\activate pour windows(à la racine du projet)
+3. switcher sur le virtual env : source venv/bin/activate pour linux ou venv\Scripts\activate pour windows(à la racine du projet)
 4. récupérer les modules du fichier requirements.txt sur votre venv : pip install -r requirements.txt(à la racine du projet)
 
 Démarrage

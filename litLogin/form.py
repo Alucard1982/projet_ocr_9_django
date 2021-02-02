@@ -4,8 +4,8 @@ from litLogin.models import User
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label='Username')
-    password = forms.CharField(label='Password', widget=forms.PasswordInput())
+    username = forms.CharField(label="Username")
+    password = forms.CharField(label="Password", widget=forms.PasswordInput())
 
 
 class RegistrationForm(UserCreationForm):
